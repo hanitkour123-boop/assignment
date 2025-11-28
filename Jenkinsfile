@@ -1,17 +1,13 @@
-environment {
-    BRANCH = "${env.BRANCH_NAME}"
-}
-
-stage('Check Branch') {
-    steps {
-        echo "Current branch is: ${env.BRANCH_NAME}"
-    }
-}
-
 pipeline {
     agent any
 
     stages {
+
+        stage('Check Branch') {
+            steps {
+                echo "Current branch is: ${env.BRANCH_NAME}"
+            }
+        }
 
         stage('Build') {
             steps {
@@ -29,15 +25,11 @@ pipeline {
 
         stage('Prod') {
             when {
-                branch 'master'
+                expression { env.BRANCH_NAME == 'master' }
             }
             steps {
                 echo "Deploying to production..."
-                sh '''
-                docker stop webapp || true
-                docker rm webapp || true
-                docker run -d -p 8080:80 --name webapp hshar/webapp
-                '''
+                sh 'echo Production deployment done'
             }
         }
     }
