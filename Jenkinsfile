@@ -1,3 +1,16 @@
+
+pipeline {
+    agent any
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        // your other stages
+    }
+}
+
 pipeline {
     agent any
 
