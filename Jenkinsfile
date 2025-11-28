@@ -22,19 +22,20 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.image(BASE_IMAGE).pull() // Pull base image
-                    sh "docker build -t ${DOCKER_IMAGE} ."
-                }
+                // Pull base image
+                sh "docker pull ${BASE_IMAGE}"
+                // Build new image tagging with your Docker Hub repo
+                sh "docker build -t ${DOCKER_IMAGE} ."
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDS) {
-                        docker.image(DOCKER_IMAGE).push()
-                    }
+                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDS}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    // Login to Docker Hub
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                    // Push image
+                    sh "docker push ${DOCKER_IMAGE}"
                 }
             }
         }
