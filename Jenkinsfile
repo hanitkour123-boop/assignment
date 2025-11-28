@@ -38,14 +38,11 @@ pipeline {
         }
 
         stage('Push to Docker Hub') {
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDS) {
-                        docker.image(DOCKER_IMAGE).push()
-                    }
-                }
+    steps {
+        script {
+            docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDS) {
+                docker.image(DOCKER_IMAGE).push()
             }
         }
     }
 }
-
