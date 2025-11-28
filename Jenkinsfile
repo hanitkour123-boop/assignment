@@ -1,16 +1,3 @@
-
-pipeline {
-    agent any
-    stages {
-        stage('Clean Workspace') {
-            steps {
-                cleanWs()
-            }
-        }
-        // your other stages
-    }
-}
-
 pipeline {
     agent any
 
@@ -21,6 +8,12 @@ pipeline {
     }
 
     stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -31,18 +24,20 @@ pipeline {
             steps {
                 script {
                     docker.image(BASE_IMAGE).pull() // Pull base image
-                    // Build new image tagging with your Docker Hub repo
                     sh "docker build -t ${DOCKER_IMAGE} ."
                 }
             }
         }
 
         stage('Push to Docker Hub') {
-    steps {
-        script {
-            docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDS) {
-                docker.image(DOCKER_IMAGE).push()
-            } //
-        } //
-    } //
-} //
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDS) {
+                        docker.image(DOCKER_IMAGE).push()
+                    }
+                }
+            }
+        }
+    }
+}
+
