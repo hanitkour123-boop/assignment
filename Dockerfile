@@ -1,2 +1,3 @@
-FROM nginx:alpine
-COPY . /usr/share/nginx/html
+FROM hshar/webapp
+COPY . /var/www/html
+
