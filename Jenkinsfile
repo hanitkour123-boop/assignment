@@ -42,7 +42,7 @@ pipeline {
         script {
             docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDS) {
                 docker.image(DOCKER_IMAGE).push()
-            }
-        }
-    }
-}
+            } //
+        } //
+    } //
+} //
