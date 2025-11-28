@@ -1,3 +1,13 @@
+environment {
+    BRANCH = "${env.BRANCH_NAME}"
+}
+
+stage('Check Branch') {
+    steps {
+        echo "Current branch is: ${env.BRANCH_NAME}"
+    }
+}
+
 pipeline {
     agent any
 
