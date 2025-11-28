@@ -23,8 +23,13 @@ pipeline {
             }
             steps {
                 echo "Deploying to production..."
-                sh 'docker run -d -p 8080:80 hshar/webapp'
+                sh '''
+                docker stop webapp || true
+                docker rm webapp || true
+                docker run -d -p 8080:80 --name webapp hshar/webapp
+                '''
             }
         }
     }
 }
+
