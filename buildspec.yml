@@ -4,20 +4,25 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 217248978097.dkr.ecr.us-east-2.amazonaws.com
-
+      - export ACCOUNT_ID=217248978097
+      - export REGION=us-east-2
+      - export REPO_NAME=website-app
+      - export IMAGE_URI=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:latest
+      - echo "IMAGE_URI is $IMAGE_URI"
+      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
 
   build:
     commands:
-      - echo Building Docker image...
+      - echo Building the Docker image...
       - docker build -t $IMAGE_URI .
 
   post_build:
     commands:
-      - echo Pushing Docker image...
+      - echo Pushing the Docker image...
       - docker push $IMAGE_URI
-      - echo Build completed
+      - echo Build completed successfully
 
 artifacts:
   files:
     - '**/*'
+
